@@ -1,0 +1,15 @@
+#
+# config
+mysql: # mysql
+  localhost: 127.0.0.1
+  port: 3306
+  user: root
+  password: root
+  database: im
+
+redis: # redis
+  localhost: 127.0.0.1
+  port: 6379
+  password: root
+
+domain: http://127.0.0.1:8080/
