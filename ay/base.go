@@ -9,15 +9,14 @@
 
 package ay
 
+import "gorm.io/gorm"
+
 type Base struct {
 }
 
 var (
-	Domain string
+	Db *gorm.DB
 )
 
 func init() {
-	var yaml Yaml
-	yaml.GetConf()
-	Domain = yaml.Domain
 }

@@ -8,21 +8,13 @@ import (
 var Redis redis.Conn
 
 //
-func init() {
-	var yaml Yaml
-	yaml.GetConf()
-	c, err := redis.Dial("tcp", yaml.Redis.Localhost+":"+yaml.Redis.Port)
+func ConnRedis() {
+
+	c, err := redis.Dial("tcp", Yaml.GetString("redis.localhost")+":"+Yaml.GetString("redis.port"))
 	if err != nil {
 		log.Println("conn redis failed,", err)
 		return
 	}
-
-	//defer c.Close()
-	//_, err = c.Do("Set", "abc", 100)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
 
 	Redis = c
 }
