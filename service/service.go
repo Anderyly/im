@@ -5,7 +5,6 @@ import (
 )
 
 func Set(r *gin.Engine) *gin.Engine {
-	r = SetSession(r)
+	r.Use(Cors())
 	return r
-
 }
