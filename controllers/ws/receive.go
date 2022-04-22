@@ -13,7 +13,7 @@ func Receive(node *Node) {
 	for {
 		_, data, err := node.Conn.ReadMessage()
 		if err != nil {
-			log.Println(err.Error())
+			log.Println(err)
 			return
 		}
 

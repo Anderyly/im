@@ -25,7 +25,7 @@ func main() {
 	//ay.Con()
 	go ws.MessageToMysql()
 	//http.HandleFunc("/ws", ws.MainController{}.Home)
-	err := r.Run(":8080")
+	err := r.Run(":8090")
 	if err != nil {
 		panic(err.Error())
 	}

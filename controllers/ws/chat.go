@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"im/ay"
 	"im/models"
 	"im/models/api"
@@ -24,6 +25,8 @@ func (con Chat) Operate(msg Message, data []byte) {
 		//CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		CreatedAt: models.JsonTime(time.Now()),
 	})
+
+	fmt.Println(cc)
 
 	_, err = ay.Redis.Do("lpush", "message", cc)
 	if err != nil {
