@@ -99,21 +99,6 @@ type GetDForm struct {
 	Str string `form:"str" binding:"required"`
 }
 
-// Login 登入
-func (con UserController) D(c *gin.Context) {
-	var data GetDForm
-	if err := c.ShouldBind(&data); err != nil {
-		ay.Json{}.Msg(c, "400", ay.Validator{}.Translate(err), gin.H{})
-		return
-	}
-
-	res := ay.AuthCode(data.Str, "DECODE", "", 0)
-
-	ay.Json{}.Msg(c, "200", "success", gin.H{
-		"token": res,
-	})
-}
-
 type GetHistoryForm struct {
 	Token     string `form:"token" binding:"required"`
 	ReceiveId string `form:"receive_id" binding:"required"`

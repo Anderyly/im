@@ -21,7 +21,6 @@ func ApiRouters(r *gin.RouterGroup) {
 	// 用户
 	apiGroup.POST("user/reg", api.UserController{}.Register)
 	apiGroup.POST("user/login", api.UserController{}.Login)
-	apiGroup.GET("user/D", api.UserController{}.D)
 	apiGroup.POST("user/history", api.UserController{}.GetHistory)
 
 }
