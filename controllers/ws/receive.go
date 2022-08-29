@@ -39,7 +39,15 @@ func MessageToMysql() {
 			continue
 		}
 
-		ay.Db.Table("im_msg").Create(&msg)
+		tx := ay.Db.Begin()
+
+		if tx.Table("im_msg").Create(&msg).Error != nil {
+			_, err = ay.Redis.Do("lpush", "message", res)
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+
 		//log.Println(msg)
 	}
 

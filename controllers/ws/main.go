@@ -63,7 +63,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	go Send(node)
 	go Receive(node)
 
-	msg := `{"send_id":"System","type":1,"receive_id":"` + id + `","content":"用户：` + id + ` 接入成功"}`
+	msg := `{"send_id":"System","type":0,"receive_id":"` + id + `","content":"用户：` + id + ` 接入成功"}`
 
 	// 设置链接用户在线
 	UserOnline(id)
