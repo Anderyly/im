@@ -7,7 +7,8 @@ import (
 )
 
 func UserOnline(id string) {
-	_, err := ay.Redis.Do("ZADD", "online_users", id, time.Now().Unix())
+	ay.Redis.Do("ZREM", "online_users", id)
+	_, err := ay.Redis.Do("ZADD", "online_users", time.Now().Unix(), id)
 	if err != nil {
 		log.Println(err)
 		return
