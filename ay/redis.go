@@ -7,7 +7,6 @@ import (
 
 var Redis redis.Conn
 
-//
 func ConnRedis() {
 
 	c, err := redis.Dial("tcp", Yaml.GetString("redis.localhost")+":"+Yaml.GetString("redis.port"))

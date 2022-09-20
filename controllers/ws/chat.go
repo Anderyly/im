@@ -2,10 +2,7 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"im/ay"
-	"im/models"
-	"im/models/api"
 	"log"
 	"time"
 )
@@ -17,20 +14,21 @@ type Chat struct {
 
 func (con Chat) Operate(msg Message, data []byte) {
 
-	cc, err := json.Marshal(&api.Msg{
+	isRead := 1
+
+	cc, err := json.Marshal(&Message{
 		SendId:    msg.SendId,
 		ReceiveId: msg.ReceiveId,
 		Content:   msg.Content,
 		Type:      msg.Type,
-		//CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		CreatedAt: models.JsonTime(time.Now()),
+		IsRead:    isRead,
+		SendAt:    msg.CreatedAt,
+		CreatedAt: time.Now().Unix(),
 	})
-
-	fmt.Println(cc)
 
 	_, err = ay.Redis.Do("lpush", "message", cc)
 	if err != nil {
-		log.Println(err)
+		log.Println("operate:" + err.Error())
 	}
 	SendMsg(msg.ReceiveId, data)
 }
