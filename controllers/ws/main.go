@@ -6,6 +6,8 @@ import (
 	"im/ay"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 var (
@@ -24,14 +26,14 @@ type Node struct {
 
 var clientMap map[string]*Node = make(map[string]*Node, 0)
 
-// {"send_id":"123","type":1,"receive_id":"456","content":""}
+// Message {"send_id":"123","type":1,"receive_id":"456","content":""}
 type Message struct {
 	Id        int64  `json:"id,omitempty" form:"id"`                 // 消息ID
 	Type      int    `json:"type,omitempty" form:"type"`             // 消息类型： 1私聊 9检测心跳
 	SendId    string `json:"send_id,omitempty" form:"send_id"`       // 发送者
 	ReceiveId string `json:"receive_id,omitempty" form:"receive_id"` // 接收者
 	Content   string `json:"content,omitempty" form:"content"`       // 消息的内容
-	CreatedAt string `json:"created_at,omitempty" form:"created_at"` // 消息的内容
+	CreatedAt int64  `json:"created_at,omitempty" form:"created_at"` // 消息的内容
 }
 
 func WsHandler(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +65,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	go Send(node)
 	go Receive(node)
 
-	msg := `{"send_id":"System","type":0,"receive_id":"` + id + `","content":"用户：` + id + ` 接入成功"}`
+	msg := `{"send_id":"System","type":0,"receive_id":"` + id + `","content":"用户：` + id + ` 接入成功", "created_at":` + strconv.FormatInt(time.Now().Unix(), 10) + `}`
 
 	// 设置链接用户在线
 	UserOnline(id)
@@ -77,6 +79,20 @@ func Dispatch(data []byte) {
 	if err != nil {
 		log.Println(err.Error())
 		return
+	}
+
+	errMsg := Message{
+		Type:      0,
+		SendId:    "System",
+		ReceiveId: msg.SendId,
+		Content:   "发送人不可与接收人一致",
+		CreatedAt: time.Now().Unix(),
+	}
+
+	// 发送人处理
+	if msg.ReceiveId == msg.SendId {
+		output, _ := json.Marshal(errMsg)
+		SendMsg(msg.SendId, output)
 	}
 
 	switch msg.Type {

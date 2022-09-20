@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -99,9 +100,9 @@ func AuthCode(str, operation, key string, expiry int64) string {
 	// 明文，前10位用来保存时间戳，解密时验证数据有效性，10到26位用来保存$keyB(密匙b)，解密时会通过这个密匙验证数据完整性
 	// 如果是解码的话，会从第$ckey_length位开始，因为密文前$ckey_length位保存 动态密匙，以保证解密正确
 	if operation == "DECODE" {
-		//str = strings.Replace(str, "-", "+", -1)
-		//str = strings.Replace(str, "_", "/", -1)
-		//str = strings.Replace(str, "*", "=", -1)
+		str = strings.Replace(str, "-", "+", -1)
+		str = strings.Replace(str, "_", "/", -1)
+		str = strings.Replace(str, "*", "=", -1)
 		strByte, err := base64.StdEncoding.DecodeString(str[cKeyLength:])
 		if err != nil {
 			log.Fatal(err)
@@ -162,9 +163,9 @@ func AuthCode(str, operation, key string, expiry int64) string {
 		// 把动态密匙保存在密文里，这也是为什么同样的明文，生产不同密文后能解密的原因
 		// 因为加密后的密文可能是一些特殊字符，复制过程可能会丢失，所以用base64编码
 		result = keyC + base64.StdEncoding.EncodeToString([]byte(result))
-		//result = strings.Replace(result, "+", "-", -1)
-		//result = strings.Replace(result, "/", "_", -1)
-		//result = strings.Replace(result, "=", "*", -1)
+		result = strings.Replace(result, "+", "-", -1)
+		result = strings.Replace(result, "/", "_", -1)
+		result = strings.Replace(result, "=", "*", -1)
 		return result
 	}
 }
